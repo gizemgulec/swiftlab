@@ -1,36 +1,55 @@
-# swiftlab
+# SwiftLab
 
-Swift projeleri için platform bağımsız, test edilebilir bir başlangıç mimarisi.
+A platform-independent, testable foundation for Swift projects.
 
-## Mimari
+## Architecture
 
-Kod, bağımlılıkların dış katmanlardan iç katmanlara doğru aktığı üç katmana ayrılır:
+The code is organized into three layers. Dependencies point from the outer
+layers toward the abstractions in the Domain layer:
 
 ```text
 Presentation  ->  Domain  <-  Data
 ```
 
-- `Domain/Models`: Uygulamanın iş modelleri. UI veya veri kaynağı detaylarını bilmez.
-- `Domain/Repositories`: Veri erişimi için protokoller. Use case'ler yalnızca bu soyutlamalara bağlıdır.
-- `Domain/UseCases`: Tek bir iş akışını temsil eden uygulama kuralları.
-- `Data/Repositories`: API, veritabanı veya bellek gibi somut veri kaynakları.
-- `Presentation`: ViewModel ve UI state'i. SwiftUI/UIKit ekranları bu katmanı tüketebilir.
+- `Domain/Models`: Business models that know nothing about UI or data sources.
+- `Domain/Repositories`: Repository protocols used by use cases.
+- `Domain/UseCases`: Application rules, with one focused operation per use case.
+- `Data/Repositories`: Concrete data sources such as APIs, databases, or memory.
+- `Presentation`: View models and UI state consumed by SwiftUI or UIKit screens.
 
-Örnek akış:
+The current task-list example supports loading, creating, and toggling tasks:
 
 ```text
-TaskListView -> TaskListViewModel -> FetchTasksUseCase -> TaskRepository
-                                                        <- InMemoryTaskRepository
+TaskListView
+    -> TaskListViewModel
+    -> FetchTasksUseCase / AddTaskUseCase / ToggleTaskUseCase
+    -> TaskRepository
+                         <- InMemoryTaskRepository
 ```
 
-`TaskRepository` protokolü sayesinde gerçek API veya kalıcı veritabanı daha sonra
-`Data` altında eklenebilir; Presentation ve Domain katmanlarının değişmesi gerekmez.
+`TaskRepository` keeps the Domain and Presentation layers independent from the
+storage implementation. A real API or persistent database can be added under
+`Data` without changing the feature's business rules.
 
-## Çalıştırma
+## Project structure
+
+```text
+Sources/SwiftLab
+├── Domain
+│   ├── Models
+│   ├── Repositories
+│   └── UseCases
+├── Data
+│   └── Repositories
+└── Presentation
+    └── TaskList
+```
+
+## Run tests
 
 ```bash
 swift test
 ```
 
-Bir Xcode projesi için `Package.swift` dosyası Xcode ile açılabilir veya paket,
-uygulamanın bağımlılığı olarak eklenebilir.
+Open `Package.swift` in Xcode to use the package as a library or add it as a
+dependency to an iOS or macOS application.
