@@ -42,8 +42,16 @@ Sources/SwiftLab
 ├── Data
 │   └── Repositories
 └── Presentation
+    ├── SwiftUILabs
+    │   ├── ContentView
+    │   ├── CounterLab
+    │   └── WorkoutListLab
     └── TaskList
 ```
+
+The SwiftUI labs are small, hands-on examples for `@State`, `List`,
+`Identifiable`, and extracting a row into its own view. `ContentView` links to
+each lab, and the TODO prompts are exercises to extend them while learning.
 
 ## Run tests
 
