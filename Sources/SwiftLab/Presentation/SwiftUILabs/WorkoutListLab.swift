@@ -1,13 +1,18 @@
 import SwiftUI
 
 public struct WorkoutListLab: View {
-    @State private var workouts = Workout.samples
+    @Binding private var workouts: [Workout]
 
-    public init() {}
+    public init(workouts: Binding<[Workout]>) {
+        self._workouts = workouts
+    }
 
     public var body: some View {
-        List(workouts) { workout in
-            WorkoutRow(workout: workout)
+        List {
+            ForEach(workouts) { workout in
+                WorkoutRow(workout: workout)
+            }
+            .onDelete { workouts.remove(atOffsets: $0) }
         }
         .navigationTitle("Antrenmanlar")
     }
@@ -39,5 +44,5 @@ private struct WorkoutRow: View {
 // 3. Workout'ları tarihe göre sırala (ipucu: sorted(by:))
 
 #Preview {
-    NavigationStack { WorkoutListLab() }
+    NavigationStack { WorkoutListLab(workouts: .constant(Workout.samples)) }
 }
