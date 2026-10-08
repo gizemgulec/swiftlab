@@ -52,6 +52,9 @@ Sources/SwiftLab
 The SwiftUI labs are small, hands-on examples for `@State`, `List`,
 `Identifiable`, and extracting a row into its own view. `ContentView` links to
 each lab, and the TODO prompts are exercises to extend them while learning.
+Workout entries are saved as Codable data in `UserDefaults`, sorted newest
+first in the list, and summarized with a total distance. Deleting the last
+entry shows an empty state; changes persist across app launches.
 
 ## Run tests
 

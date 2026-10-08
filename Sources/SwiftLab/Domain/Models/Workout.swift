@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Workout: Identifiable, Equatable, Sendable {
+public struct Workout: Identifiable, Equatable, Codable, Sendable {
     public let id: UUID
     public var date: Date
     public var distance: Int
