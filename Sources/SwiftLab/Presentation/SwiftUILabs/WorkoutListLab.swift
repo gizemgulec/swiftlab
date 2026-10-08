@@ -9,12 +9,42 @@ public struct WorkoutListLab: View {
 
     public var body: some View {
         List {
-            ForEach(workouts) { workout in
-                WorkoutRow(workout: workout)
+            if workouts.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: "figure.run")
+                        .font(.largeTitle)
+                        .foregroundStyle(.secondary)
+                    Text("Henüz antrenman yok")
+                        .font(.headline)
+                    Text("Yeni antrenman ekleyerek başlayın.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, minHeight: 220)
+                .listRowSeparator(.hidden)
+            } else {
+                Section {
+                    ForEach(sortedWorkouts) { workout in
+                        WorkoutRow(workout: workout)
+                    }
+                    .onDelete { offsets in
+                        let ids = offsets.map { sortedWorkouts[$0].id }
+                        workouts.removeAll { ids.contains($0.id) }
+                    }
+                } header: {
+                    Text("Toplam mesafe: \(totalDistance) m")
+                }
             }
-            .onDelete { workouts.remove(atOffsets: $0) }
         }
         .navigationTitle("Antrenmanlar")
+    }
+
+    private var sortedWorkouts: [Workout] {
+        workouts.sorted { $0.date > $1.date }
+    }
+
+    private var totalDistance: Int {
+        workouts.reduce(0) { $0 + $1.distance }
     }
 }
 
@@ -37,11 +67,6 @@ private struct WorkoutRow: View {
         .padding(.vertical, 4)
     }
 }
-
-// GÖREVLER:
-// 1. Kaydırarak silme ekle (ipucu: List { ForEach { } .onDelete { } })
-// 2. Listenin en üstüne toplam mesafeyi gösteren bir Section ekle
-// 3. Workout'ları tarihe göre sırala (ipucu: sorted(by:))
 
 #Preview {
     NavigationStack { WorkoutListLab(workouts: .constant(Workout.samples)) }
