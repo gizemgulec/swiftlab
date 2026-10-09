@@ -45,6 +45,7 @@ Sources/SwiftLab
     ├── SwiftUILabs
     │   ├── ContentView
     │   ├── CounterLab
+    │   ├── WorkoutEditorSheet
     │   └── WorkoutListLab
     └── TaskList
 ```
@@ -53,8 +54,9 @@ The SwiftUI labs are small, hands-on examples for `@State`, `List`,
 `Identifiable`, and extracting a row into its own view. `ContentView` links to
 each lab, and the TODO prompts are exercises to extend them while learning.
 Workout entries are saved as Codable data in `UserDefaults`, sorted newest
-first in the list, and summarized with a total distance. Deleting the last
-entry shows an empty state; changes persist across app launches.
+first in the list, and summarized with a total distance. Entries can be edited,
+searched by note or distance, and filtered to the last 7 or 30 days. Deleting
+the last entry shows an empty state; changes persist across app launches.
 
 ## Run tests
 
