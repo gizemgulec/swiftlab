@@ -64,5 +64,7 @@ the last entry shows an empty state; changes persist across app launches.
 swift test
 ```
 
-Open `Package.swift` in Xcode to use the package as a library or add it as a
-dependency to an iOS or macOS application.
+Open `SwiftLabApp.xcodeproj` in Xcode and run the `SwiftLabApp` scheme on an iOS
+simulator. The app target uses this package as a local dependency. `Package.swift`
+can still be used independently as a library or added to another iOS or macOS
+application.
