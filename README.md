@@ -46,7 +46,8 @@ Sources/SwiftLab
     │   ├── ContentView
     │   ├── CounterLab
     │   ├── WorkoutEditorSheet
-    │   └── WorkoutListLab
+    │   ├── WorkoutListLab
+    │   └── WorkoutStatsLab
     └── TaskList
 ```
 
@@ -57,6 +58,9 @@ Workout entries are saved as Codable data in `UserDefaults`, sorted newest
 first in the list, and summarized with a total distance. Entries can be edited,
 searched by note or distance, and filtered to the last 7 or 30 days. Deleting
 the last entry shows an empty state; changes persist across app launches.
+The statistics screen summarizes the current week's distance, workout count,
+duration, and average pace, charts daily distances, and tracks a persistent
+weekly distance goal.
 
 ## Run tests
 

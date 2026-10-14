@@ -25,6 +25,9 @@ public struct ContentView: View {
                     NavigationLink("03 · Form – Yeni Antrenman") {
                         FormLab(savedWorkouts: $workouts)
                     }
+                    NavigationLink("04 · İstatistikler ve Hedef") {
+                        WorkoutStatsLab(workouts: workouts)
+                    }
                 }
             }
             .navigationTitle("SwiftLab")
