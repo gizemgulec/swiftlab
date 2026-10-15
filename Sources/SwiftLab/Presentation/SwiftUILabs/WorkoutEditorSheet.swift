@@ -5,6 +5,7 @@ struct WorkoutEditorSheet: View {
     @State private var date: Date
     @State private var distance: Int
     @State private var duration: Int
+    @State private var intensity: Workout.Intensity
     @State private var note: String
 
     let workout: Workout
@@ -16,6 +17,7 @@ struct WorkoutEditorSheet: View {
         _date = State(initialValue: workout.date)
         _distance = State(initialValue: workout.distance)
         _duration = State(initialValue: workout.duration)
+        _intensity = State(initialValue: workout.intensity)
         _note = State(initialValue: workout.note)
     }
 
@@ -30,6 +32,12 @@ struct WorkoutEditorSheet: View {
                     #endif
 
                 Stepper("Süre (dk): \(duration)", value: $duration, in: 1...1_440)
+
+                Picker("Yoğunluk", selection: $intensity) {
+                    ForEach(Workout.Intensity.allCases) { intensity in
+                        Text(intensity.rawValue).tag(intensity)
+                    }
+                }
 
                 TextField("Not", text: $note, axis: .vertical)
                     .lineLimit(3...5)
@@ -58,6 +66,7 @@ struct WorkoutEditorSheet: View {
                 date: date,
                 distance: distance,
                 duration: duration,
+                intensity: intensity,
                 note: note.trimmingCharacters(in: .whitespacesAndNewlines)
             )
         )

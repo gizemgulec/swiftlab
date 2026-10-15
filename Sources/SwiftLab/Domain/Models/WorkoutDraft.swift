@@ -1,13 +1,7 @@
 import Foundation
 
 public struct WorkoutDraft {
-    public enum Intensity: String, CaseIterable, Identifiable {
-        case easy = "Sakin"
-        case steady = "Tempo"
-        case interval = "Interval"
-
-        public var id: Self { self }
-    }
+    public typealias Intensity = Workout.Intensity
 
     public var date: Date
     public var distance: Int?

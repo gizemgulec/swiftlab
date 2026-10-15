@@ -44,11 +44,39 @@ final class WorkoutListFilterTests: XCTestCase {
         XCTAssertEqual(results.map(\.note), ["Recent"])
     }
 
+    func testIntensityFilterCanBeCombinedWithSearchAndPeriod() {
+        let workouts = [
+            makeWorkout(daysAgo: 1, distance: 5000, note: "Tempo", intensity: .steady),
+            makeWorkout(daysAgo: 2, distance: 8000, note: "Repeats", intensity: .interval),
+            makeWorkout(daysAgo: 8, distance: 4000, note: "Repeats", intensity: .interval)
+        ]
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let filter = WorkoutListFilter(
+            query: "repeats",
+            period: .week,
+            intensity: .interval
+        )
+
+        let results = filter.apply(to: workouts, now: now)
+
+        XCTAssertEqual(results.map(\.distance), [8000])
+    }
+
     private func makeWorkout(daysAgo: Int, distance: Int, note: String) -> Workout {
+        makeWorkout(daysAgo: daysAgo, distance: distance, note: note, intensity: .easy)
+    }
+
+    private func makeWorkout(
+        daysAgo: Int,
+        distance: Int,
+        note: String,
+        intensity: Workout.Intensity
+    ) -> Workout {
         Workout(
             date: Date(timeIntervalSince1970: 1_800_000_000 - Double(daysAgo * 86_400)),
             distance: distance,
             duration: 30,
+            intensity: intensity,
             note: note
         )
     }
