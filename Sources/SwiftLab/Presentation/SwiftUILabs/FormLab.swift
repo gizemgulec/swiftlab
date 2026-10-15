@@ -74,8 +74,12 @@ public struct FormLab: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(workout.date, style: .date)
                                 .font(.headline)
-                            Text("\(workout.distance) m · \(workout.duration) dk · \(workout.note)")
+                            Text("\(workout.intensity.rawValue) · \(workout.distance) m · \(workout.duration) dk")
                                 .foregroundStyle(.secondary)
+                            if !workout.note.isEmpty {
+                                Text(workout.note)
+                                    .font(.caption)
+                            }
                         }
                     }
                     .onDelete { savedWorkouts.remove(atOffsets: $0) }
@@ -91,16 +95,16 @@ public struct FormLab: View {
               let duration = draft.duration
         else { return }
 
-        let trimmedNote = draft.note.trimmingCharacters(in: .whitespacesAndNewlines)
-        let fullNote = draft.hasNote && !trimmedNote.isEmpty
-            ? "\(draft.intensity.rawValue) – \(trimmedNote)"
-            : draft.intensity.rawValue
+        let trimmedNote = draft.hasNote
+            ? draft.note.trimmingCharacters(in: .whitespacesAndNewlines)
+            : ""
 
         let workout = Workout(
             date: draft.date,
             distance: distance,
             duration: duration,
-            note: fullNote
+            intensity: draft.intensity,
+            note: trimmedNote
         )
         savedWorkouts.insert(workout, at: 0)
         reset()

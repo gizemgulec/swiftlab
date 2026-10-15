@@ -4,6 +4,7 @@ public struct WorkoutListLab: View {
     @Binding private var workouts: [Workout]
     @State private var searchText = ""
     @State private var selectedPeriod = WorkoutListFilter.Period.all
+    @State private var selectedIntensity = WorkoutListFilter.IntensityFilter.all
     @State private var workoutToEdit: Workout?
 
     public init(workouts: Binding<[Workout]>) {
@@ -50,8 +51,13 @@ public struct WorkoutListLab: View {
                             Text(period.title).tag(period)
                         }
                     }
+                    Picker("Yoğunluk", selection: $selectedIntensity) {
+                        ForEach(WorkoutListFilter.IntensityFilter.allCases) { intensity in
+                            Text(intensity.title).tag(intensity)
+                        }
+                    }
                 } label: {
-                    Label("Dönem filtresi", systemImage: "line.3.horizontal.decrease")
+                    Label("Filtreler", systemImage: "line.3.horizontal.decrease")
                 }
             }
         }
@@ -66,7 +72,11 @@ public struct WorkoutListLab: View {
     }
 
     private var visibleWorkouts: [Workout] {
-        WorkoutListFilter(query: searchText, period: selectedPeriod).apply(to: workouts)
+        WorkoutListFilter(
+            query: searchText,
+            period: selectedPeriod,
+            intensity: selectedIntensity
+        ).apply(to: workouts)
     }
 
     private var totalDistance: Int {
@@ -101,6 +111,10 @@ private struct WorkoutRow: View {
 
                 Text("\(workout.distance) m · \(workout.duration) dk")
                     .foregroundStyle(.secondary)
+
+                Text(workout.intensity.rawValue)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.tint)
 
                 if !workout.note.isEmpty {
                     Text(workout.note)
@@ -137,8 +151,36 @@ struct WorkoutListFilter {
         }
     }
 
+    enum IntensityFilter: String, CaseIterable, Identifiable {
+        case all
+        case easy
+        case steady
+        case interval
+
+        var id: Self { self }
+
+        var title: String {
+            switch self {
+            case .all: "Tüm yoğunluklar"
+            case .easy: Workout.Intensity.easy.rawValue
+            case .steady: Workout.Intensity.steady.rawValue
+            case .interval: Workout.Intensity.interval.rawValue
+            }
+        }
+
+        var intensity: Workout.Intensity? {
+            switch self {
+            case .all: nil
+            case .easy: .easy
+            case .steady: .steady
+            case .interval: .interval
+            }
+        }
+    }
+
     var query: String = ""
     var period: Period = .all
+    var intensity: IntensityFilter = .all
 
     func apply(
         to workouts: [Workout],
@@ -160,9 +202,11 @@ struct WorkoutListFilter {
             .filter { workout in
                 let matchesQuery = trimmedQuery.isEmpty
                     || workout.note.localizedCaseInsensitiveContains(trimmedQuery)
+                    || workout.intensity.rawValue.localizedCaseInsensitiveContains(trimmedQuery)
                     || String(workout.distance).localizedCaseInsensitiveContains(trimmedQuery)
                 let matchesPeriod = cutoff.map { workout.date >= $0 } ?? true
-                return matchesQuery && matchesPeriod
+                let matchesIntensity = intensity.intensity.map { workout.intensity == $0 } ?? true
+                return matchesQuery && matchesPeriod && matchesIntensity
             }
             .sorted { $0.date > $1.date }
     }
