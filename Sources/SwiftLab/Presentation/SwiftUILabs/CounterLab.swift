@@ -3,6 +3,7 @@ import SwiftUI
 public struct CounterLab: View {
     @State private var count = 0
     @State private var stepIndex = 0
+    @AppStorage("swiftlab.counterLab.personalRecord") private var personalRecord = 0
 
     private let steps = [1, 5, 10]
 
@@ -20,11 +21,18 @@ public struct CounterLab: View {
                 .contentTransition(.opacity)
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: count)
 
+            Label("Rekor: \(personalRecord)", systemImage: "trophy.fill")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+
             HStack(spacing: 16) {
                 Button("−") { count = max(0, count - step) }
                     .disabled(count == 0)
 
-                Button("+") { count += step }
+                Button("+") {
+                    count += step
+                    personalRecord = max(personalRecord, count)
+                }
             }
             .font(.largeTitle)
             .buttonStyle(.bordered)
