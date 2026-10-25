@@ -3,12 +3,13 @@ import SwiftUI
 public struct CounterLab: View {
     @State private var count = 0
     @State private var stepIndex = 0
+    @AppStorage("swiftlab.counterLab.goal") private var goal = 10
 
     private let steps = [1, 5, 10]
 
     private var isEven: Bool { count % 2 == 0 }
     private var step: Int { steps[stepIndex] }
-    private var hasReachedGoal: Bool { count >= 10 }
+    private var hasReachedGoal: Bool { count >= goal }
 
     public init() {}
 
@@ -32,8 +33,11 @@ public struct CounterLab: View {
             Stepper("Adım: \(step)", value: $stepIndex, in: 0...(steps.count - 1))
                 .padding(.horizontal)
 
+            Stepper("Hedef: \(goal)", value: $goal, in: 10...100, step: 10)
+                .padding(.horizontal)
+
             if hasReachedGoal {
-                Label("Hedef!", systemImage: "checkmark.circle.fill")
+                Label("Hedefe ulaştın!", systemImage: "checkmark.circle.fill")
                     .font(.title2.weight(.semibold))
                     .foregroundStyle(.green)
                     .transition(.scale.combined(with: .opacity))
