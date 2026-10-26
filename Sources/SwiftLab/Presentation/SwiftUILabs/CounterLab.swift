@@ -3,6 +3,7 @@ import SwiftUI
 public struct CounterLab: View {
     @State private var count = 0
     @State private var stepIndex = 0
+    @State private var previousCount: Int?
     @AppStorage("swiftlab.counterLab.goal") private var goal = 10
 
     private let steps = [1, 5, 10]
@@ -22,13 +23,21 @@ public struct CounterLab: View {
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: count)
 
             HStack(spacing: 16) {
-                Button("−") { count = max(0, count - step) }
+                Button("−") { updateCount(to: max(0, count - step)) }
                     .disabled(count == 0)
 
-                Button("+") { count += step }
+                Button("+") { updateCount(to: count + step) }
             }
             .font(.largeTitle)
             .buttonStyle(.bordered)
+
+            Button("Son işlemi geri al", systemImage: "arrow.uturn.backward") {
+                guard let previousCount else { return }
+                count = previousCount
+                self.previousCount = nil
+            }
+            .buttonStyle(.bordered)
+            .disabled(previousCount == nil)
 
             Stepper("Adım: \(step)", value: $stepIndex, in: 0...(steps.count - 1))
                 .padding(.horizontal)
@@ -43,10 +52,15 @@ public struct CounterLab: View {
                     .transition(.scale.combined(with: .opacity))
             }
 
-            Button("Sıfırla", role: .destructive) { count = 0 }
+            Button("Sıfırla", role: .destructive) { updateCount(to: 0) }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.7), value: hasReachedGoal)
         .navigationTitle("Sayaç")
+    }
+
+    private func updateCount(to newCount: Int) {
+        previousCount = count
+        count = newCount
     }
 }
 
