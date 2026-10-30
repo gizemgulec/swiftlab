@@ -1,7 +1,7 @@
 import SwiftUI
 
 public struct CounterLab: View {
-    @State private var count = 0
+    @AppStorage("swiftlab.counterLab.count") private var count = 0
     @State private var stepIndex = 0
     @State private var previousCount: Int?
     @AppStorage("swiftlab.counterLab.goal") private var goal = 10
