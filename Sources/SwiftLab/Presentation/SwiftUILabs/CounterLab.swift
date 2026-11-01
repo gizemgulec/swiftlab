@@ -11,6 +11,7 @@ public struct CounterLab: View {
     private var isEven: Bool { count % 2 == 0 }
     private var step: Int { steps[stepIndex] }
     private var hasReachedGoal: Bool { count >= goal }
+    private var progressCount: Int { min(max(count, 0), goal) }
 
     public init() {}
 
@@ -21,6 +22,17 @@ public struct CounterLab: View {
                 .foregroundStyle(isEven ? .blue : .orange)
                 .contentTransition(.opacity)
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: count)
+
+            VStack(spacing: 8) {
+                Text("Hedefe ilerleme: \(progressCount) / \(goal)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
+                ProgressView(value: Double(progressCount), total: Double(goal))
+                    .accessibilityLabel("Hedefe ilerleme")
+                    .accessibilityValue("\(progressCount) / \(goal)")
+            }
+            .padding(.horizontal)
 
             HStack(spacing: 16) {
                 Button("−") { updateCount(to: max(0, count - step)) }
