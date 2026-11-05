@@ -63,7 +63,8 @@ The statistics screen summarizes the current week's distance, workout count,
 duration, and average pace, charts daily distances, and tracks a persistent
 weekly distance goal.
 The counter lab also preserves the current count and its goal across app
-launches, and shows progress toward the selected goal.
+launches, shows progress toward the selected goal, and asks for confirmation
+before resetting the count.
 
 ## Run tests
 
