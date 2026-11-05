@@ -4,6 +4,7 @@ public struct CounterLab: View {
     @AppStorage("swiftlab.counterLab.count") private var count = 0
     @State private var stepIndex = 0
     @State private var previousCount: Int?
+    @State private var isShowingResetConfirmation = false
     @AppStorage("swiftlab.counterLab.goal") private var goal = 10
 
     private let steps = [1, 5, 10]
@@ -64,9 +65,19 @@ public struct CounterLab: View {
                     .transition(.scale.combined(with: .opacity))
             }
 
-            Button("Sıfırla", role: .destructive) { updateCount(to: 0) }
+            Button("Sıfırla", role: .destructive) {
+                isShowingResetConfirmation = true
+            }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.7), value: hasReachedGoal)
+        .confirmationDialog(
+            "Sayacı sıfırlamak istiyor musun?",
+            isPresented: $isShowingResetConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Sayacı Sıfırla", role: .destructive) { updateCount(to: 0) }
+            Button("İptal", role: .cancel) {}
+        }
         .navigationTitle("Sayaç")
     }
 
